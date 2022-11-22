@@ -1,15 +1,17 @@
 from rest_framework.views import APIView
-from product.models import Products
-from product.serializer import ProductsSerializer
+from product.models import Products, Categories
+from product.serializer import ProductsSerializer, CategorySerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
+from product.permissions import IsAdminOrAuthenticatedOrReadOnly
 # Create your views here.
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
 
     def get(self, request):
+        print(request.method)
         pagination = PageNumberPagination()
         pagination.page_size = 16
         pagination.page_query_param = "pages"
@@ -18,8 +20,6 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
         serializer = ProductsSerializer(p, many=True)
 
         return Response({"data":serializer.data, "max_page":len(products)//16 +1}, status=status.HTTP_200_OK)
-
-class ProductCreate(APIView):       # create/ 제품 생성
 
     def post(self, request):
         serializer = ProductsSerializer(data=request.data)
@@ -51,12 +51,17 @@ class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
         pass
 
 class CategoriView(APIView):
+    permission_classes = (IsAdminOrAuthenticatedOrReadOnly, )
 
-    permission_classes = [permissions.IsAdminUser]
     def get(self, request):
-
-        return Response()
+        categories = Categories.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-
-        return Response()
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
