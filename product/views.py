@@ -5,13 +5,14 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-from product.permissions import IsAdminOrAuthenticatedOrReadOnly
+from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
+from rest_framework.generics import get_object_or_404
 # Create your views here.
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
 
     def get(self, request):
-        print(request.method)
+
         pagination = PageNumberPagination()
         pagination.page_size = 16
         pagination.page_query_param = "pages"
@@ -21,6 +22,14 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
 
         return Response({"data":serializer.data, "max_page":len(products)//16 +1}, status=status.HTTP_200_OK)
 
+    permission_classes = (DeletePermissition,)
+    def delete(self, reqeust):
+        product = Products.objjects.all()
+        product.delete()
+        return Response({"message":"삭제되었습니다!"}, status=status.HTTP_200_OK)
+
+class ProductCreateView(APIView):
+
     def post(self, request):
         serializer = ProductsSerializer(data=request.data)
         if serializer.is_valid():
@@ -28,6 +37,7 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
             return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
 

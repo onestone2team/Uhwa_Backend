@@ -22,4 +22,16 @@ class IsAdminOrAuthenticatedOrReadOnly(BasePermission):
 
         else:
             return False
-        
+
+
+class DeletePermissition(BasePermission):
+
+    def has_permission(self, request, view):
+        message ="접근 권한이 없습니다!"
+        user = request.user
+
+        if request.method == "DELETE" and user.is_admin:
+            return True
+
+        else:
+            return False
