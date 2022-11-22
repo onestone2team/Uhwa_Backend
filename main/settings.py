@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'user',
     'product',
     'order',
+    'mypage',
 
 ]
 
@@ -137,6 +138,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

@@ -1,16 +1,33 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
+from product.models import Products
+from product.serializer import ProductsSerializer
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import permissions
 # Create your views here.
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
 
     def get(self, request):
-        pass
+        pagination = PageNumberPagination()
+        pagination.page_size = 16
+        pagination.page_query_param = "pages"
+        products = Products.objects.all()
+        p = pagination.paginate_queryset(queryset=products, request=request)
+        serializer = ProductsSerializer(p, many=True)
+
+        return Response({"data":serializer.data, "max_page":len(products)//16 +1}, status=status.HTTP_200_OK)
 
 class ProductCreate(APIView):       # create/ 제품 생성
 
     def post(self, request):
-        pass
+        serializer = ProductsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
 
@@ -32,3 +49,14 @@ class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
 
     def delete(self, request):
         pass
+
+class CategoriView(APIView):
+
+    permission_classes = [permissions.IsAdminUser]
+    def get(self, request):
+
+        return Response()
+
+    def post(self, request):
+
+        return Response()
