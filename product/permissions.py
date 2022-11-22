@@ -22,3 +22,4 @@ class IsAdminOrAuthenticatedOrReadOnly(BasePermission):
 
         else:
             return False
+        
