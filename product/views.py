@@ -26,7 +26,7 @@ class DeleteProductView(APIView):
     permission_classes = (DeletePermissition,)
 
     def delete(self, reqeust, products_id):
-        product = Products.objjects.all()
+        product = Products.objects.get(id=products_id)
         product.delete()
         return Response({"message":"삭제되었습니다!"}, status=status.HTTP_200_OK)
 
