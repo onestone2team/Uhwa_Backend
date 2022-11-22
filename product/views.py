@@ -11,6 +11,7 @@ from rest_framework.generics import get_object_or_404
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
 
+
     def get(self, request):
 
         pagination = PageNumberPagination()
@@ -19,11 +20,12 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
         products = Products.objects.all()
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductsSerializer(p, many=True)
-
         return Response({"data":serializer.data, "max_page":len(products)//16 +1}, status=status.HTTP_200_OK)
 
+class DeleteProductView(APIView):
     permission_classes = (DeletePermissition,)
-    def delete(self, reqeust):
+
+    def delete(self, reqeust, products_id):
         product = Products.objjects.all()
         product.delete()
         return Response({"message":"삭제되었습니다!"}, status=status.HTTP_200_OK)
