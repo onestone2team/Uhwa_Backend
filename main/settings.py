@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'user',
     'product',
     'order',
+    'mypage',
+    
 
 ]
 
