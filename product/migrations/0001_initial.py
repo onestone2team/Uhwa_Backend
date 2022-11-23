@@ -35,6 +35,8 @@ class Migration(migrations.Migration):
                 ('bookmark', models.ManyToManyField(blank=True, null=True, related_name='add_bookmark', to=settings.AUTH_USER_MODEL)),
                 ('category', models.ForeignKey(default='T-shirt', on_delete=django.db.models.deletion.CASCADE, to='product.categories')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('update_at', models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(

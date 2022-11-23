@@ -50,7 +50,7 @@ class Users(AbstractBaseUser):
     phone = models.CharField('연락처',max_length=30,blank=True, default='-')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    
+
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
