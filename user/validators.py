@@ -1,7 +1,7 @@
 import re
 
 def emailvaildator(email):
-    is_email = re.compile(r'^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+    is_email = re.compile(r'^[a-zA-Z0-9+-_.]+@([a-zA-Z0-9-]{4,})+\.[a-zA-Z0-9-.]+$')
     if not is_email.fullmatch(email):
         return False
     return True

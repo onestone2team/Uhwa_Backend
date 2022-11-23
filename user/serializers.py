@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         is_password = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$')
         if not is_password.fullmatch(attrs['password']):
-             raise serializers.ValidationError("비밀번호는 최소 8자이상, 하나의 문자와 하나의 숫자 및 하나의 특수문자를 포함해야합니다. ")
+             raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")
         password_valid = passwordvaildator(
             attrs['password'], attrs["password_check"])
         if password_valid == False:
@@ -38,6 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = super().update(validated_data)
         password = user.password
         user.set_password(password)
+        user.is_active = False
         user.save()
         return user
 
@@ -47,4 +48,5 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['is_admin'] = user.is_admin
+        token['address'] = user.address
         return token
