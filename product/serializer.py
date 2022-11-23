@@ -11,6 +11,7 @@ class ProductsSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         return obj.user.email
+
     class Meta:
         model = Products
         fields = "__all__"

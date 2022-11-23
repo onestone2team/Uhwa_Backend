@@ -32,7 +32,7 @@ class DeleteProductView(APIView):
         return Response({"message":"삭제되었습니다!"}, status=status.HTTP_200_OK)
 
 class ProductCreateView(APIView):
-
+    # permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
         print(request.user)
         serializer = ProductsCreateSerializer(data=request.data)
