@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from product.models import Products, Categories
-from product.serializer import ProductsSerializer, CategorySerializer
+from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -34,9 +34,10 @@ class DeleteProductView(APIView):
 class ProductCreateView(APIView):
 
     def post(self, request):
-        serializer = ProductsSerializer(data=request.data)
+        print(request.user)
+        serializer = ProductsCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -39,7 +39,7 @@ class MyUserManager(BaseUserManager):
 
 
 class Users(AbstractBaseUser):
-    email = models.EmailField(verbose_name='email address',unique=True)
+    email = models.EmailField(verbose_name='email address', unique=True)
     password = models.CharField('비밀번호',max_length=30)
     profile = models.ImageField('프로필 사진',upload_to='%y/%m/', default='basic_profile/guest.png')
     profilename = models.CharField('회원이름',max_length=30,blank=True, default='something')
