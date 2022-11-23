@@ -1,12 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework import permissions
 from product.models import Products
-from mypage.serializer import BookmarkSerializer, MyProductListSerializer
+from mypage.serializer import BookmarkSerializer, MyProductListSerializer, ProfileMyOrderlistSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import get_object_or_404
 from product.models import Products
 from order.models import Orders
+from rest_framework.generics import get_object_or_404
 # Create your views here.
 class ProfileView(APIView):             #회원 정보 확인 및 수정
 
@@ -31,11 +31,13 @@ class ProfileBookmark(APIView):         #bookmarklist/ 찜한 상품 리스트
 class ProfileMyProducts(APIView):       #myproducts/ 내가 만든 상품 리스트
 
     def get(self, request):
-        product = Products.objects.filter(id=request.user.id)
+        product = Products.objects.filter(user_id=request.user.id)
         serializer = MyProductListSerializer(product, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class ProfileMyOrderlist(APIView):      #myorderlist/ 나의 주문 목록
+class ProfileMyOrderlis(APIView):      #myorderlist/ 나의 주문 목록
 
     def get(self, request):
-        product = Orders.objects.filter(id=request.user)
+        product = Orders.objects.filter(user_id=request.user.id)
+        serializer = ProfileMyOrderlistSerializer(product, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

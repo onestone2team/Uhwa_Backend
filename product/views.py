@@ -34,7 +34,6 @@ class DeleteProductView(APIView):
 class ProductCreateView(APIView):
     # permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
-        print(request.user)
         serializer = ProductsCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -83,8 +82,8 @@ class CategoriView(APIView):
 class Bookmarkhandle(APIView):
     permission_classes=[permissions.IsAuthenticated]
 
-    def post(self, request, porducts_id):
-        bookmark_list = get_object_or_404(Products, id=porducts_id)
+    def post(self, request, product_id):
+        bookmark_list = get_object_or_404(Products, id=product_id)
         if request.user in bookmark_list.bookmark.all():
             bookmark_list.bookmark.remove(request.user)
             return Response({"message":"북마크에 삭제되었습니다"}, status=status.HTTP_200_OK)
