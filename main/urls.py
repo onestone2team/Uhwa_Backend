@@ -24,7 +24,6 @@ urlpatterns = [
     path('user/',include("user.urls")),
     path('order/',include("order.urls")),
     path('products/',include("product.urls")),
-
     path('profile/',include("mypage.urls")),
 ]
 
