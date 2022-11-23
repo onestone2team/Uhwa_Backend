@@ -44,7 +44,7 @@ class Users(AbstractBaseUser):
     email = models.EmailField(verbose_name='email address',unique=True)
     password = models.CharField('비밀번호',max_length=30)
     profile = models.ImageField('프로필 사진',upload_to='%y/%m/', default='basic_profile/guest.png')
-    profilename = models.CharField('회원이름',max_length=30,blank=True, default='something')
+    profilename = models.CharField('회원이름',max_length=30,blank=True, default='-')
     # address = AddressField('배송지',max_length=100,blank=True, default='sth' )
     address = models.TextField('배송지',blank=True, default='-')
     phone = models.CharField('연락처',max_length=30,blank=True, default='-')

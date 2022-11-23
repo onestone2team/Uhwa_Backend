@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from user.serializers import UserSerializer,CustomedUserSerializer
+from user.serializers import UserSerializer,CustomedUserSerializer,UserProfileSerializer
 from .models import Users
 # Create your views here.
 
@@ -31,11 +31,11 @@ class UserDeleteView(APIView):
 
 class UserProfileView(APIView):
     def get(self, request):
-        profile = Users.objects.all(id=request.user.id)
+        profile = Users.objects.get(id=request.user.id)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
     def put(self,request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserProfileSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response({"message":"회원가입 성공!"}, status=status.HTTP_201_CREATED)
