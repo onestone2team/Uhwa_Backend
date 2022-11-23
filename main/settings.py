@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'product',
     'order',
     'mypage',
-
 ]
 
 REST_FRAMEWORK = {
