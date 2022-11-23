@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.is_active = True
         user.save()
         return user
-
+        
     def update(self, validated_data):
         user = super().update(validated_data)
         password = user.password
@@ -42,7 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
 class CustomedUserSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -50,3 +49,6 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         token['is_admin'] = user.is_admin
         token['address'] = user.address
         return token
+
+class UserSerializer(serializers.ModelSerializer):
+    
