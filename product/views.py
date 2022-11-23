@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework import permissions
 from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
 from rest_framework.generics import get_object_or_404
+
 # Create your views here.
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
@@ -77,3 +78,15 @@ class CategoriView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+
+class Bookmarkhandle(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+
+    def post(self, request, porducts_id):
+        bookmark_list = get_object_or_404(Products, id=porducts_id)
+        if request.user in bookmark_list.bookmark.all():
+            bookmark_list.bookmark.remove(request.user)
+            return Response({"message":"북마크에 삭제되었습니다"}, status=status.HTTP_200_OK)
+        else:
+            bookmark_list.bookmark.add(request.user)
+            return Response({"message":"북마크에 추가하였습니다"}, status=status.HTTP_202_ACCEPTED)
