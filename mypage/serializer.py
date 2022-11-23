@@ -8,3 +8,11 @@ class BookmarkSerializer(serializers.ModelSerializer):
         model = Products
         fields = "__all__"
 
+
+
+class MyProductListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Products
+        fields = "__all__"
+

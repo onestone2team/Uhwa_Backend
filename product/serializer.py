@@ -8,7 +8,10 @@ def hide_option_validator():
 
 
 class ProductsSerializer(serializers.ModelSerializer):
-
+    product_user = serializers.SerializerMethodField()
+    
+    def get_product_user(self, obj):
+        return self.product_user.user
     class Meta:
         model = Products
         fields = "__all__"
