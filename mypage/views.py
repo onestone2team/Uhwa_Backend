@@ -19,7 +19,12 @@ class ProfileView(APIView):
         return Response(serializer.data)
     def put(self,request):
         profile=Users.objects.get(id=request.user.id)
-        profile_serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+        profile_update = dict()
+        for key, value in request.data.items():
+            if value:
+                profile_update.update({key:value})
+        
+        profile_serializer = UserProfileSerializer(profile, data=profile_update, partial=True)
         if profile_serializer.is_valid(raise_exception=True):
             profile_serializer.save()
             return Response({"data":profile_serializer.data,"message":"프로필 수정 완료"}, status=status.HTTP_201_CREATED)
