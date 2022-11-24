@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from user.models import Users
-from .validators import ( passwordvalidator, emailvalidator, phonevalidator )
+from .validators import passwordvalidator, emailvalidator, phonevalidator 
 import re
 
 class UserSerializer(serializers.ModelSerializer):
     password_check = serializers.CharField(max_length=50, write_only=True)
+    
     class Meta:
         model = Users
         fields = '__all__'
