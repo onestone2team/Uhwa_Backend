@@ -14,13 +14,17 @@ class MyUserManager(BaseUserManager):
         birth and password.
         """
         if not email:
-            raise ValueError('Users must have an email')
+
+            raise ValueError('User must have an email')
+        if not password:
+            raise ValueError('User must have a password')
         if not profilename:
-            raise ValueError('Users must have a profilename')
+            raise ValueError('User must have an profilename')
+
         instance = self.model(
             email=email, profilename=profilename,
         )
-
+        instance.profilename=profilename
         instance.set_password(password)
         instance.save(using=self._db)
         return instance
@@ -40,10 +44,10 @@ class MyUserManager(BaseUserManager):
 
 
 class Users(AbstractBaseUser):
-    email = models.EmailField(verbose_name='email address', unique=True)
+    email = models.EmailField('이메일', unique=True)
     password = models.CharField('비밀번호',max_length=30)
     profile = models.ImageField('프로필 사진',upload_to='%y/%m/', default='basic_profile/guest.png')
-    profilename = models.CharField('회원이름',max_length=30,blank=True, default='-')
+    profilename = models.CharField('회원이름',max_length=30, unique=True)
     # address = AddressField('배송지',max_length=100,blank=True, default='sth' )
     address = models.TextField('배송지',blank=True, default='-')
     phone = models.CharField('연락처',max_length=30,blank=True, default='-')
@@ -64,7 +68,7 @@ class Users(AbstractBaseUser):
     #      instance.profilename = 'instance'+instance.user_id
 
     def __str__(self):
-        return self.email
+        return self.profilename
 
     def has_perm(self, perm, obj=None):
         "Does the instance have a specific permission?"
