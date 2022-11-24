@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from product.models import Products, Categories
-from product.serializers import ProductSerializer, CategorySerializer, ProductCreateSerializer
+from product.models import Products, Categories, Comments
+from product.serializers import ProductSerializer, CategorySerializer, ProductCreateSerializer, CommentsSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -45,24 +45,32 @@ class ProductDetail(APIView):
 
     def get(self, request):
         pass
-
+ 
     def post(self, request):
         pass
 
-# 상세 페이지내 댓글 생성
-class ProductComment(APIView):      
+class ProductComment(APIView):      # 상세 페이지내 댓글 생성
+    def post(self, request, product_id,format=None):
+     serializer = CommentsSerializer(data= request.data)
+     if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "해당 글이 생성되었습니다.", "data":"serializer.data"} , status=status.HTTP_200_OK )
+     else:
+       return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
 
-    def post(self, request):
-        pass
+class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
+    def put(self, request, product_id, comment_id):
+        comment = get_object_or_404(Comments, id=comment_id)
+        serializer = CommentsSerializer(comment, data = request.data)
+        if serializer.is_valid():
+          serializer.save()  
+          return Response({"message":"해당 글이 수정되었습니다.","data":"serializer.data"}, status=status.HTTP_201_CREATED)
 
-# 댓글 수정 및 삭제 기능
-class CommentDetail(APIView):       
-
-    def put(self, request):
-        pass
-
-    def delete(self, request):
-        pass
+    def delete(self, request, product_id, comment_id):
+        comment = get_object_or_404(Comments, id=comment_id)
+        comment.delete()
+        return Response({"message":"해당 글이 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
 
 # 상세페이지 북마크
 class ProductBookmarkView(APIView):
