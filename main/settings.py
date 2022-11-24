@@ -54,8 +54,9 @@ INSTALLED_APPS = [
     'product',
     'order',
     'mypage',
-    
+
 ]
+
 
 REST_FRAMEWORK = {
 
@@ -139,11 +140,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100
-}
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -163,11 +159,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.Users'
 
 SIMPLE_JWT = {
-		# Access 토큰 유효 시간 설정하기
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=72),
-		# Refresh 토큰 유효 시간 설정하기
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=720),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,

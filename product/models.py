@@ -9,22 +9,25 @@ class Categories(models.Model):
     category_price = models.IntegerField()
 
     def __str__(self):
-        return str(self.name)
+        return str(self.category_name)
 
 class Products(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ImageField(upload_to='%y/%m/')
     hide_option = models.BooleanField(default=False)
-    bookmark = models.ManyToManyField(Users, related_name = 'add_bookmark', null=True, blank=True)
+    bookmark = models.ManyToManyField(Users, related_name = 'add_bookmark', blank=True)
     created_at = models.DateTimeField(auto_now_add=True),
     update_at = models.DateTimeField(auto_now=True),
 
 class Comments(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products,null=True,blank=True, on_delete=models.CASCADE)
     comment = models.TextField(null = True)
     grade = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add = True)
     update_at = models.DateTimeField(auto_now = True)
 
+class User_image(models.Model):
+    user_image=models.ImageField(upload_to='%y/%m/')
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)

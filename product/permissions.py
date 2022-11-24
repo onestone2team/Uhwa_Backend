@@ -23,7 +23,6 @@ class IsAdminOrAuthenticatedOrReadOnly(BasePermission):
         else:
             return False
 
-
 class DeletePermissition(BasePermission):
 
     def has_permission(self, request, view):
