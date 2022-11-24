@@ -6,7 +6,7 @@ def hide_option_validator():
     pass
 
 
-class ProductsSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_user(self, obj):
@@ -16,7 +16,7 @@ class ProductsSerializer(serializers.ModelSerializer):
         model = Products
         fields = "__all__"
 
-class ProductsCreateSerializer(serializers.ModelSerializer):
+class ProductCreateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_user(self, obj):
@@ -27,7 +27,7 @@ class ProductsCreateSerializer(serializers.ModelSerializer):
         fields = ("user", "image")
 
 class CategorySerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Categories
         fields = "__all__"

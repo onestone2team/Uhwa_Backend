@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import permissions
 from product.models import Products
-from mypage.serializer import MyBookmarkListSerializer, MyProductListSerializer, MyOrderListSerializer
+from mypage.serializers import MyBookmarkListSerializer, MyProductListSerializer, MyOrderListSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from product.models import Products
@@ -32,7 +32,6 @@ class MyBookmarkView(APIView):
 
 #myproducts/ 내가 만든 상품 리스트
 class MyProductsView(APIView):      
-
     def get(self, request):
         product = Products.objects.filter(user_id=request.user.id)
         serializer = MyProductListSerializer(product, many=True)
@@ -40,7 +39,6 @@ class MyProductsView(APIView):
 
 #myorderlist/ 나의 주문 목록
 class MyOrderlistView(APIView):      
-
     def get(self, request):
         product = Orders.objects.filter(user_id=request.user.id)
         serializer = MyOrderListSerializer(product, many=True)

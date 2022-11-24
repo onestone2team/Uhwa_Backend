@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from order.models import Orders
-from order.serializer import OrderListSerializer, AddOrderListSerializer, ChangeOrderStatusSerializer
+from order.serializers import OrderListSerializer, AddOrderListSerializer, ChangeOrderStatusSerializer
 from rest_framework import permissions
 
 
