@@ -22,9 +22,12 @@ class Products(models.Model):
 
 class Comments(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products,null=True,blank=True, on_delete=models.CASCADE)
     comment = models.TextField(null = True)
     grade = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add = True)
     update_at = models.DateTimeField(auto_now = True)
 
+class User_image(models.Model):
+    user_image=models.ImageField(upload_to='%y/%m/')
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
