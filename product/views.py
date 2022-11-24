@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from product.models import Products, Categories
-from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer
+from product.models import Products, Categories,User_image
+from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer,UserimagesaveSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,11 +8,10 @@ from rest_framework import permissions
 from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
 from rest_framework.generics import get_object_or_404
 
+from product.shirt import get_result_shirt
 # Create your views here.
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
-
-
     def get(self, request):
 
         pagination = PageNumberPagination()
@@ -34,12 +33,24 @@ class DeleteProductView(APIView):
 class ProductCreateView(APIView):
     # permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
-        serializer = ProductsCreateSerializer(data=request.data)
+        # serializer = ProductsCreateSerializer(data=request.data)
+        serializer=UserimagesaveSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            # print(serializer.data)
+            get_result_shirt(serializer.data["user_image"])
+            
+            
+        return Response({"data":serializer.data,"message":"이미지전송 성공"})
+        
+        
+    
+        
+        # if serializer.is_valid():
+        #     serializer.save(user=request.user)
+        #     return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+        # else:
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
