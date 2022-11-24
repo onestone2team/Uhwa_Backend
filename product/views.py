@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from product.models import Products, Categories
-from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer
+from product.models import Products, Categories,Comments
+from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer,CommentsSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status

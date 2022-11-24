@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from product.models import Products, Categories,User_image
+from product.models import Products, Categories,User_image,Comments
 
 
 def hide_option_validator():
