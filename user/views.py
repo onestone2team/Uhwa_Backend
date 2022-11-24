@@ -7,7 +7,7 @@ from .models import Users
 # Create your views here.
 
 #signup/ 회원가입
-class UserSignupView(APIView):        
+class UserSignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -17,11 +17,11 @@ class UserSignupView(APIView):
             return Response({"message":"다시 시도해주세요"}, status=status.HTTP_400_BAD_REQUEST)
 
 #login/ 로그인
-class UserLoginView(TokenObtainPairView):        
+class UserLoginView(TokenObtainPairView):
     serializer_class = CustomedUserSerializer
 
 #delete/ 회원 탈퇴
-class UserDeleteView(APIView):      
+class UserDeleteView(APIView):
     def delete(self, request):
         user = Users.objects.get(id=request.user.id)
         if user:

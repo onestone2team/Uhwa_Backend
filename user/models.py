@@ -1,6 +1,4 @@
 from django.db import models
-
-from address.models import AddressField
 # from django.db.models.signals import pre_save
 # from django.dispatch import receiver
 
@@ -41,7 +39,7 @@ class MyUserManager(BaseUserManager):
 
 
 class Users(AbstractBaseUser):
-    email = models.EmailField(verbose_name='email address',unique=True)
+    email = models.EmailField(verbose_name='email address', unique=True)
     password = models.CharField('비밀번호',max_length=30)
     profile = models.ImageField('프로필 사진',upload_to='%y/%m/', default='basic_profile/guest.png')
     profilename = models.CharField('회원이름',max_length=30,blank=True, default='-')
@@ -59,7 +57,6 @@ class Users(AbstractBaseUser):
     #     if self.pk is None:
     #         self.profilename = self.user_id
     # super(Users,self).save(*args, **kwargs)
-    
     # @receiver(pre_save, sender=Users)
     # def default_profilename(sender, instance, **kwargs):
     #  if not instance.profilename:

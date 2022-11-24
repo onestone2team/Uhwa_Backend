@@ -9,7 +9,7 @@ class Categories(models.Model):
     category_price = models.IntegerField()
 
     def __str__(self):
-        return str(self.name)
+        return str(self.category_name)
 
 class Products(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)

@@ -9,5 +9,4 @@ class Orders(models.Model):
     size = models.CharField(max_length=5)
     count = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add = True)
-    order_status = models.IntegerField()
-    
+    order_status = models.IntegerField(default=0, blank=True)

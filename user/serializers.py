@@ -12,12 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         is_password = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$')
         if not is_password.fullmatch(attrs['password']):
-             raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")
+            raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")
         password_valid = passwordvalidator(
             attrs['password'], attrs["password_check"])
         if password_valid == False:
             raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
-        attrs.pop('password_check', None)    
+        attrs.pop('password_check', None)
         email_valid = emailvalidator(attrs['email'])
         if email_valid == False:
             raise serializers.ValidationError("유효하지 않은 이메일입니다.")
@@ -65,4 +65,3 @@ class UserProfileSerializer(serializers.ModelSerializer):
         instance.phone = validated_data.get('phone', instance.phone)
         instance.save()
         return instance
-    
