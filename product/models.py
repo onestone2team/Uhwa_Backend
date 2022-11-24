@@ -13,14 +13,14 @@ class Categories(models.Model):
 
 class Products(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+    category = models.ForeignKey(Categories,null=True, blank=True, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='%y/%m/')
     hide_option = models.BooleanField(default=False)
     bookmark = models.ManyToManyField(Users, related_name = 'add_bookmark')
 
 class Comments(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products,null=True,blank=True, on_delete=models.CASCADE)
     comment = models.TextField(null = True)
     grade = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add = True)
