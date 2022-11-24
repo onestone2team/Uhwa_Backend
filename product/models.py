@@ -23,7 +23,7 @@ class Products(models.Model):
 class Comments(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
-    comment = models.TextField(null = True)
+    comment = models.TextField(null = True, related_name='nonono')
     grade = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add = True)
     update_at = models.DateTimeField(auto_now = True)
