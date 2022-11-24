@@ -10,8 +10,8 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class AddOrderListSerializer(serializers.ModelSerializer):
-    class Meta:
 
+    class Meta:
         model = Orders
         fields = ("price", "size", "count")
 

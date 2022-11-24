@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework import permissions
 from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
 from rest_framework.generics import get_object_or_404
+import cv2
+import base64
 
 # Create your views here.
 
@@ -41,6 +43,16 @@ class ProductCreateView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class MachineRunningView(APIView):
+
+    def post(self, request):
+        print(request.data)
+        print(request.data["image"])
+        img = cv2.imread(f'{request.data["image"]}')
+        print(img)
+        jpg_img = cv2.imencode('.jpg', img)
+        b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
+        return Response({"image":b64_string})
 
 class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
 
