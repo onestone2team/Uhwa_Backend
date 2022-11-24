@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from product.models import Products, Categories
+from product.models import Products, Categories,User_image,Comments
 
 
 def hide_option_validator():
@@ -36,3 +36,13 @@ class CategorySerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Categories
 #         fields = ("image",)
+class UserimagesaveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User_image
+        fields = "__all__"
+
+class CommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = "__all__"

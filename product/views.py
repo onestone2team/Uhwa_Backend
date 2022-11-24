@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from product.models import Products, Categories, Comments
-from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer, CommentsSerializer
+from product.models import Products, Categories,Comments
+from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer,CommentsSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -118,4 +118,4 @@ class Bookmarkhandle(APIView):
             return Response({"message": "북마크에 삭제되었습니다"}, status=status.HTTP_200_OK)
         else:
             bookmark_list.bookmark.add(request.user)
-            return Response({"message": "북마크에 추가하였습니다"}, status=status.HTTP_202_ACCEPTED)
+            return Response({"message":"북마크에 추가하였습니다"}, status=status.HTTP_202_ACCEPTED)

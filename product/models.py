@@ -28,3 +28,6 @@ class Comments(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     update_at = models.DateTimeField(auto_now = True)
 
+class User_image(models.Model):
+    user_image=models.ImageField(upload_to='%y/%m/')
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
