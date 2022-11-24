@@ -1,12 +1,12 @@
 import re
 from user.models import Users
 
-def profilenamevalidator(profilename):
-    print(profilename)
-    print(Users.objects.profilename)
-    if profilename in Users.objects.profilename:
-        return False
-    return True
+# def profilenamevalidator(profilename):
+#     print(profilename)
+#     print(Users.objects.profilename)
+#     if profilename in Users.objects.profilename:
+#         return False
+#     return True
 
 def emailvalidator(email):
     is_email = re.compile(r'^[a-zA-Z0-9+-_.]+@([a-zA-Z0-9-]{4,})+\.[a-zA-Z0-9-.]+$')

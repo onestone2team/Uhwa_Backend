@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from user.models import Users
-from .validators import profilenamevalidator, emailvalidator, passwordvalidator, phonevalidator 
+from .validators import emailvalidator, passwordvalidator, phonevalidator #,profilenamevalidator
 import re
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,10 +22,10 @@ class UserSerializer(serializers.ModelSerializer):
         email_valid = emailvalidator(attrs['email'])
         if email_valid == False:
             raise serializers.ValidationError("유효하지 않은 이메일입니다.")
-        profilename_valid = profilenamevalidator(attrs['profilename'])
-        if not profilename_valid:
-            profilename=attrs['profilename']
-            raise serializers.ValidationError(f"({profilename}은 이미 사용중인 닉네임입니다. 다시 입력해주세요)")
+        # profilename_valid = profilenamevalidator(attrs['profilename'])
+        # if not profilename_valid:
+        #     profilename=attrs['profilename']
+        #     raise serializers.ValidationError(f"({profilename}은 이미 사용중인 닉네임입니다. 다시 입력해주세요)")
 
         return super().validate(attrs)
 
