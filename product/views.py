@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from product.models import Products, Categories,Comments
-from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer,CommentsSerializer
+from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer, CommentsSerializer, ProductsDetailSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,6 +9,7 @@ from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissi
 from rest_framework.generics import get_object_or_404
 import cv2
 import base64
+from django.db.models import Q
 
 # Create your views here.
 
@@ -18,13 +19,12 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
     def get(self, request):
 
         pagination = PageNumberPagination()
-        pagination.page_size = 16
+        pagination.page_size = 9
         pagination.page_query_param = "pages"
         products = Products.objects.all()
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductsSerializer(p, many=True)
-        return Response({"data": serializer.data, "max_page": len(products)//16 + 1}, status=status.HTTP_200_OK)
-
+        return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
 
 class DeleteProductView(APIView):
     permission_classes = (DeletePermissition,)
@@ -36,45 +36,41 @@ class DeleteProductView(APIView):
 
 
 class ProductCreateView(APIView):
-    # permission_classes=[permissions.IsAuthenticated]
+    permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
-        serializer = ProductsCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response({"data": serializer.data, "message": "생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = ProductsCreateSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user_id=request.user.id)
+                return Response({"data": serializer.data, "message": "생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MachineRunningView(APIView):
 
     def post(self, request):
-        print(request.data)
-        print(request.data["image"])
         img = cv2.imread(f'{request.data["image"]}')
-        print(img)
         jpg_img = cv2.imencode('.jpg', img)
         b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
         return Response({"image": b64_string})
 
 
-class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
-
-    def get(self, request):
-        pass
-
-    def post(self, request):
-        pass
+    # def post(self, request, product_id):
+    #     pass
 
 
 class ProductComment(APIView):      # 상세 페이지내 댓글 생성
     def post(self, request, product_id, format=None):
-        serializer = CommentsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "해당 글이 생성되었습니다.", "data": "serializer.data"}, status=status.HTTP_200_OK)
+        comment = Comments.objects.filter(Q(user_id=request.user.id) & Q(product_id=product_id))
+        if comment.count() < 1:
+            serializer = CommentsSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(product_id=product_id, user_id=request.user.id)
+                return Response({"message": "해당 글이 생성되었습니다.", "data": serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"댓글은 하나만 등록 할 수 있습니다!"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
@@ -119,3 +115,11 @@ class Bookmarkhandle(APIView):
         else:
             bookmark_list.bookmark.add(request.user)
             return Response({"message":"북마크에 추가하였습니다"}, status=status.HTTP_202_ACCEPTED)
+
+
+class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
+
+    def get(self, request, product_id):
+        product = get_object_or_404(Products, id=product_id)
+        serializer = ProductsDetailSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
