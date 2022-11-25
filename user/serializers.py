@@ -41,6 +41,9 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         return token
 
 class UserInactiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = '__all__'
     def update(self, instance, validated_data):
         instance.is_active = False
         instance.save() 
