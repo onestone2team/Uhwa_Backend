@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from product.models import Products, Comments, Categories, User_image
-from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, UserimagesaveSerializer
-from rest_framework.pagination import PageNumberPagination
+from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
@@ -10,8 +9,7 @@ from rest_framework.generics import get_object_or_404
 import cv2
 import base64
 from django.db.models import Q
-
-# Create your views here.
+from rest_framework.pagination import PageNumberPagination
 
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
@@ -19,8 +17,9 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
     def get(self, request):
         pagination = PageNumberPagination()
         pagination.page_size = 9
-        pagination.page_query_param = "pages"
+        pagination.page_query_param = "page"
         products = Products.objects.all()
+
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)
         return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
@@ -90,7 +89,8 @@ class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
         serializer = CommentsSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "해당 글이 수정되었습니다.", "data": "serializer.data"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "해당 글이 수정되었습니다.", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, product_id, comment_id):
         comment = get_object_or_404(Comments, id=comment_id)
@@ -126,7 +126,7 @@ class CategoryView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Bookmarkhandle(APIView):
