@@ -14,6 +14,7 @@ class MyUserManager(BaseUserManager):
         birth and password.
         """
         if not email:
+
             raise ValueError('User must have an email')
         if not password:
             raise ValueError('User must have a password')
@@ -21,7 +22,7 @@ class MyUserManager(BaseUserManager):
             raise ValueError('User must have an profilename')
 
         instance = self.model(
-            email=email,
+            email=email, profilename=profilename,
         )
         instance.profilename=profilename
         instance.set_password(password)
@@ -55,7 +56,7 @@ class Users(AbstractBaseUser):
 
     objects = MyUserManager()
 
-    USERNAME_FIELD = 'email' # 로그인에 사용
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['profilename']
     # def save(self, *args, **kwargs):
     #     if self.pk is None:
