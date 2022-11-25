@@ -22,11 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         email_valid = emailvalidator(attrs['email'])
         if email_valid == False:
             raise serializers.ValidationError("유효하지 않은 이메일입니다.")
-        # profilename_valid = profilenamevalidator(attrs['profilename'])
-        # if not profilename_valid:
-        #     profilename=attrs['profilename']
-        #     raise serializers.ValidationError(f"({profilename}은 이미 사용중인 닉네임입니다. 다시 입력해주세요)")
-
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -45,6 +40,12 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         token['address'] = user.address
         return token
 
+class UserInactiveSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        instance.is_active = False
+        instance.save() 
+        return instance
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
@@ -58,9 +59,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             if not is_password.fullmatch(attrs['password']):
                 raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")   
         # 핸드폰 번호
-        phone_valid = phonevalidator(attrs['phone'])
-        if phone_valid == False:
-            raise serializers.ValidationError("유효하지 않은 형식입니다. 다시 입력해주세요.")
+        if 'phone' in attrs:
+            phone_valid = phonevalidator(attrs['phone'])
+            if phone_valid == False:
+                raise serializers.ValidationError("유효하지 않은 형식입니다. 다시 입력해주세요.")
         return super().validate(attrs)
         
     def update(self, instance, validated_data): 

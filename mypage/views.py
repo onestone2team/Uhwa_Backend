@@ -23,7 +23,6 @@ class ProfileView(APIView):
         for key, value in request.data.items():
             if value:
                 profile_update.update({key:value})
-        
         profile_serializer = UserProfileSerializer(profile, data=profile_update, partial=True)
         if profile_serializer.is_valid(raise_exception=True):
             profile_serializer.save()
