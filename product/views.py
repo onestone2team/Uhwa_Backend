@@ -73,7 +73,6 @@ class MachineLearningView(APIView):
     def post(self, request):
 
         serializer = MachineLearningSerializer(data=request.data)
-        print(request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
             img_url=model(serializer.data["image"], serializer.data["model"])

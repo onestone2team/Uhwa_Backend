@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name='Products',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='%y/%m/')),
+                ('image', models.TextField()),
                 ('hide_option', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('update_at', models.DateTimeField(auto_now=True)),

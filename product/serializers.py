@@ -25,7 +25,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ("user", "image", "category")
+        fields = ("user", "image", "category", "hide_option")
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -64,6 +64,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class MachineLearningSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MachineLearning
         fields = ("model", "category", "image")
