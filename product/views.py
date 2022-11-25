@@ -8,7 +8,7 @@ from rest_framework import permissions
 from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
 from rest_framework.generics import get_object_or_404
 from product.shirt import get_result_shirt,model
-# Create your views here.
+# Create your vie ws here.
 
 
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
