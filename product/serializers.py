@@ -22,8 +22,6 @@ class ProductsDetailSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         return obj.user.email
-    def get_comment_set(self, obj):
-        return obj.comment_set.comment
 
     class Meta:
         model = Products
