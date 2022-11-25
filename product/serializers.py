@@ -16,18 +16,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Products
         fields = "__all__"
 
-class ProductDetailSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-    comment_set = serializers.SerializerMethodField()
-
-    def get_user(self, obj):
-        return obj.user.email
-    def get_comment_set(self, obj):
-        return obj.comment_set.comment
-
-    class Meta:
-        model = Products
-        fields = ("user", "image", "bookmark","comment_set")
 
 class ProductCreateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
@@ -80,7 +68,7 @@ class CommentsSerializer(serializers.ModelSerializer):
         fields = ("comment", "grade", "user", "created_at")
 
 
-class ProductsDetailSerializer(serializers.ModelSerializer):
+class ProductDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     comments_set = CommentsSerializer(many=True)
 
