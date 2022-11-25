@@ -58,9 +58,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             if not is_password.fullmatch(attrs['password']):
                 raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")   
         # 핸드폰 번호
-        phone_valid = phonevalidator(attrs['phone'])
-        if phone_valid == False:
-            raise serializers.ValidationError("유효하지 않은 형식입니다. 다시 입력해주세요.")
+        if 'phone' in attrs:
+            phone_valid = phonevalidator(attrs['phone'])
+            if phone_valid == False:
+                raise serializers.ValidationError("유효하지 않은 형식입니다. 다시 입력해주세요.")
         return super().validate(attrs)
         
     def update(self, instance, validated_data): 
