@@ -8,7 +8,7 @@ from django.contrib.auth.models import (
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, profilename, password=None):
+    def create_user(self, email, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -18,18 +18,21 @@ class MyUserManager(BaseUserManager):
             raise ValueError('User must have an email')
         if not password:
             raise ValueError('User must have a password')
-        if not profilename:
-            raise ValueError('User must have an profilename')
+        # if not profilename:
+        #     raise ValueError('User must have an profilename')
 
         instance = self.model(
-            email=email, profilename=profilename,
+            email=email,
+            # profilename=profilename,
         )
-        instance.profilename=profilename
+       
         instance.set_password(password)
         instance.save(using=self._db)
         return instance
 
-    def create_superuser(self, email, profilename,password=None):
+
+    def create_superuser(self, email, profilename, password=None):
+
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -38,6 +41,7 @@ class MyUserManager(BaseUserManager):
             email = email,
             password=password,
             profilename=profilename,
+
         )
         instance.is_admin = True
         instance.save(using=self._db)
@@ -45,7 +49,7 @@ class MyUserManager(BaseUserManager):
 
 
 class Users(AbstractBaseUser):
-    email = models.EmailField('이메일', unique=True, error_messages={"unique":"email은 필수 항목입니다"})
+    email = models.EmailField('이메일', unique=True, error_messages={"unique":"이미 사용중인 이메일입니다"})
     password = models.CharField('비밀번호',max_length=30)
     profile = models.ImageField('프로필 사진',upload_to='%y/%m/', default='basic_profile/guest.png')
     profilename = models.CharField('회원이름',max_length=30,error_messages={"unique":"profilename은 필수항목입니다"})
@@ -59,14 +63,6 @@ class Users(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['profilename']
-    # def save(self, *args, **kwargs):
-    #     if self.pk is None:
-    #         self.profilename = self.user_id
-    # super(Users,self).save(*args, **kwargs)
-    # @receiver(pre_save, sender=Users)
-    # def default_profilename(sender, instance, **kwargs):
-    #  if not instance.profilename:
-    #      instance.profilename = 'instance'+instance.user_id
 
     def __str__(self):
         return self.profilename
