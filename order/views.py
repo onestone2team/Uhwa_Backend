@@ -7,7 +7,7 @@ from rest_framework import permissions
 
 
 #list/ 주문 목록 보기
-class OrderList(APIView):               
+class OrderList(APIView):
     def get(self, request):
         orders = Orders.objects.filter(user_id=request.user.id)
         serializer = OrderListSerializer(orders, many=True)
@@ -23,10 +23,10 @@ class AddOrderList(APIView):
             return Response({"message":"주문목록에 추가되었습니다!", "data":serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#list/<int:order_id>/ 주문 상태 변경
-class ChangeOrderStatus(APIView):       
+class ChangeOrderStatus(APIView):
+    #list/<int:order_id>/ 주문 상태 변경
     permission_classes=[permissions.IsAdminUser]
-   
+
     def get(self, request):
         orders = Orders.objects.all()
         serializer = OrderListSerializer(orders, many=True)
