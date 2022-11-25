@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from product.models import Products, Categories, Comments
-from product.serializers import ProductSerializer, CategorySerializer, ProductCreateSerializer, CommentsSerializer
+from product.serializers import ProductSerializer, ProductsDetailSerializer, CategorySerializer, ProductCreateSerializer, CommentsSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -44,12 +44,15 @@ class ProductDeleteView(APIView):
 class ProductDetail(APIView):       
 
     def get(self, request):
-        pass
+        product = Products.objects.get(product_id=product_id)
+        serializer = ProductsDetailSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
  
     def post(self, request):
         pass
 
-class ProductComment(APIView):      # 상세 페이지내 댓글 생성
+# 상세 페이지내 댓글 생성
+class ProductComment(APIView):      
     def post(self, request, product_id,format=None):
      serializer = CommentsSerializer(data= request.data)
      if serializer.is_valid():
@@ -58,8 +61,8 @@ class ProductComment(APIView):      # 상세 페이지내 댓글 생성
      else:
        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
-
-class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
+# 댓글 수정 및 삭제 기능
+class CommentDetail(APIView):       
     def put(self, request, product_id, comment_id):
         comment = get_object_or_404(Comments, id=comment_id)
         serializer = CommentsSerializer(comment, data = request.data)
