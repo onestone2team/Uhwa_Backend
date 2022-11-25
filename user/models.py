@@ -58,14 +58,6 @@ class Users(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['profilename']
-    # def save(self, *args, **kwargs):
-    #     if self.pk is None:
-    #         self.profilename = self.user_id
-    # super(Users,self).save(*args, **kwargs)
-    # @receiver(pre_save, sender=Users)
-    # def default_profilename(sender, instance, **kwargs):
-    #  if not instance.profilename:
-    #      instance.profilename = 'instance'+instance.user_id
 
     def __str__(self):
         return self.profilename

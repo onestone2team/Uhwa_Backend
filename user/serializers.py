@@ -43,16 +43,17 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
 class UserInactiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = '__all__'
+        fields = ('email','profilename','is_active',)
     def update(self, instance, validated_data):
-        instance.is_active = False
+        if instance.is_active == True:
+            instance.is_active = False
         instance.save() 
         return instance
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        exclude = ('is_admin','is_active','last_login')
+        exclude = ('password','is_admin','is_active','last_login')
         read_only_fields = ('email',)
 
     def validate(self, attrs):
