@@ -5,13 +5,13 @@ from PIL import Image
 # print(os.path.abspath("starry_night.t7"))
 def model(userimage,model):
     # "C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend"+
-    overlay = cv2.imread("C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend"+userimage)
+    overlay = cv2.imread("C:/Users/dd/Desktop/a2_style_transfer/"+userimage)
     # C:\Users\BeomKi\Desktop\asdasfsgd\Uhwa_Backend\11
     # /media/22/11/di2_ZO9NFbc.jpeg
 
 # ------------------------------------- overlay model 적용 시작 ---------------------------------------------------------------
     # "candy""feathers""mosaic""la_muse""starry_night""the_scream""udnie"
-    net = cv2.dnn.readNetFromTorch('C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend/product/models/instance_norm/'+model+'.t7')
+    net = cv2.dnn.readNetFromTorch('C:/Users/dd/Desktop/a2_style_transfer/product/models/instance_norm/'+model+'.t7')
     # C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend/starry_night.t7
     # 모델을 바꾸고싶으면 경로변경
     # 위 세가지는 유저가 변경가능
@@ -28,11 +28,11 @@ def model(userimage,model):
     overlay += MEAN_VALUE
     overlay = np.clip(overlay, 0, 255)
     overlay = overlay.astype('uint8')
-    cv2.imwrite("C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend"+userimage,overlay)
-    return "C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend"+userimage
+    cv2.imwrite("C:/Users/dd/Desktop/a2_style_transfer/"+userimage,overlay)
+    return "C:/Users/dd/Desktop/a2_style_transfer/"+userimage
 
 
-    
+
 def get_result_shirt(img_read,category):
     print(category)
     if category ==1:
@@ -42,7 +42,7 @@ def get_result_shirt(img_read,category):
     elif category ==3:
         category="Hood"
     print(category)
-    Backgrund= cv2.imread("C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend/product/base_image/"+category+".png")
+    Backgrund= cv2.imread("C:/Users/dd/Desktop/a2_style_transfer/product/base_image/"+category+".png")
     overlay=cv2.imread(img_read)
     # -------------------------------------업로드 이미지(.png) 배경 지우기  시작 ---------------------------------------------------------------
     if category =="shirt":
@@ -82,6 +82,6 @@ def get_result_shirt(img_read,category):
     # Backgrund[mask] = shapes[mask]
     Backgrund[mask] = cv2.addWeighted(shapes, alpha, shapes, 1 - alpha, 0)[mask]
     url=img_read.split("/")[-1]
-    cv2.imwrite("C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend/output/"+url,Backgrund)
+    cv2.imwrite("C:/Users/dd/Desktop/a2_style_transfer/media/output/"+url,Backgrund)
 
 

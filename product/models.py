@@ -14,8 +14,7 @@ class Categories(models.Model):
 class Products(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
-    model=models.CharField(max_length=50, blank=True, null=True)
-    image = models.ImageField(upload_to='%y/%m/')
+    image = models.TextField()
     hide_option = models.BooleanField(default=False)
     bookmark = models.ManyToManyField(Users, related_name = 'add_bookmark', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,3 +31,10 @@ class Comments(models.Model):
 class User_image(models.Model):
     user_image=models.ImageField(upload_to='%y/%m/')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
+
+class MachineLearning(models.Model):
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='output')
+    model = models.CharField(max_length=50)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    # image = models.ImageField()

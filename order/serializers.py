@@ -9,10 +9,14 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class AddOrderListSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+    
+    def get_product(self,obj):
+        return obj.product.category_id
 
     class Meta:
         model = Orders
-        fields = ("price", "size", "count")
+        fields = ("price", "size", "count", "product")
 
 
 class ChangeOrderStatusSerializer(serializers.ModelSerializer):
