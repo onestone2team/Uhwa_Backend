@@ -1,4 +1,3 @@
-from rest_framework import status
 from order.models import Orders
 from rest_framework import serializers
 

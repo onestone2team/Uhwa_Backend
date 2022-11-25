@@ -6,8 +6,7 @@ import base64
 def hide_option_validator():
     pass
 
-
-class ProductsSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_user(self, obj):
@@ -17,7 +16,20 @@ class ProductsSerializer(serializers.ModelSerializer):
         model = Products
         fields = "__all__"
 
-class ProductsCreateSerializer(serializers.ModelSerializer):
+class ProductsDetailSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    comment_set = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.email
+    def get_comment_set(self, obj):
+        return obj.comment_set.comment
+
+    class Meta:
+        model = Products
+        fields = ("user", "image", "bookmark","comment_set")
+
+class ProductCreateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_user(self, obj):
@@ -38,7 +50,7 @@ class ProductsCreateSerializer(serializers.ModelSerializer):
     #     return "안돼에에ㅔㅔ"
 
 class CategorySerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Categories
         fields = "__all__"

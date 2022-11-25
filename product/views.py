@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from product.models import Products, Categories,Comments
-from product.serializer import ProductsSerializer, CategorySerializer, ProductsCreateSerializer, CommentsSerializer, ProductsDetailSerializer
+from product.models import Products, Comments, Categories, User_image
+from product.serializers import ProductCreateSerializer, ProductsDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, UserimagesaveSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,7 +17,6 @@ from django.db.models import Q
 class ProductView(APIView):         # main 페이지 내 전체 데이터 불러오기
 
     def get(self, request):
-
         pagination = PageNumberPagination()
         pagination.page_size = 9
         pagination.page_query_param = "pages"
@@ -26,7 +25,19 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
         serializer = ProductsSerializer(p, many=True)
         return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
 
-class DeleteProductView(APIView):
+# 상품 생성
+class ProductCreateView(APIView):
+    # permission_classes=[permissions.IsAuthenticated]
+    def post(self, request):
+        serializer = ProductCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 상품 삭제(관리자 기능)
+class ProductDeleteView(APIView):
     permission_classes = (DeletePermissition,)
 
     def delete(self, reqeust, products_id):
@@ -87,7 +98,21 @@ class CommentDetail(APIView):       # 댓글 수정 및 삭제 기능
         return Response({"message": "해당 글이 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
 
 
-class CategoriView(APIView):
+# 상세페이지 북마크
+class ProductBookmarkView(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+
+    def post(self, request, product_id):
+        bookmark_list = get_object_or_404(Products, id=product_id)
+        if request.user in bookmark_list.bookmark.all():
+            bookmark_list.bookmark.remove(request.user)
+            return Response({"message":"북마크에 삭제되었습니다"}, status=status.HTTP_200_OK)
+        else:
+            bookmark_list.bookmark.add(request.user)
+            return Response({"message":"북마크에 추가하였습니다"}, status=status.HTTP_202_ACCEPTED)
+
+# 상품 카테고리
+class CategoryView(APIView):
     permission_classes = (IsAdminOrAuthenticatedOrReadOnly, )
 
     def get(self, request):
