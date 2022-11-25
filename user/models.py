@@ -8,7 +8,7 @@ from django.contrib.auth.models import (
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, profilename, password=None):
+    def create_user(self, email, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -18,25 +18,27 @@ class MyUserManager(BaseUserManager):
             raise ValueError('User must have an email')
         if not password:
             raise ValueError('User must have a password')
-        if not profilename:
-            raise ValueError('User must have an profilename')
+        # if not profilename:
+        #     raise ValueError('User must have an profilename')
 
         instance = self.model(
-            email=email, profilename=profilename,
+            email=email,
+            # profilename=profilename,
         )
-        instance.profilename=profilename
+       
         instance.set_password(password)
         instance.save(using=self._db)
         return instance
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, email, profilename, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         instance = self.create_user(
             email = email,
-            password=password,
+            # profilename = profilename,
+            password = password,
         )
         instance.is_admin = True
         instance.save(using=self._db)
