@@ -28,7 +28,6 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         fields = ("user", "image", "category")
 
 
-
     # def create(self, validated_data):
     #     print(validated_data)
     #     img = cv2.imread(validated_data.image)
@@ -80,4 +79,3 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
         fields = ("user", "image", "bookmark", "comments_set")
-        # fields = ("user", "image", "bookmark")

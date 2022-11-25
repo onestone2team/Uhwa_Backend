@@ -22,11 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         email_valid = emailvalidator(attrs['email'])
         if email_valid == False:
             raise serializers.ValidationError("유효하지 않은 이메일입니다.")
-        # profilename_valid = profilenamevalidator(attrs['profilename'])
-        # if not profilename_valid:
-        #     profilename=attrs['profilename']
-        #     raise serializers.ValidationError(f"({profilename}은 이미 사용중인 닉네임입니다. 다시 입력해주세요)")
-
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -45,10 +40,20 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         token['address'] = user.address
         return token
 
+class UserInactiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ('email','profilename','is_active',)
+    def update(self, instance, validated_data):
+        if instance.is_active == True:
+            instance.is_active = False
+        instance.save() 
+        return instance
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        exclude = ('is_admin','is_active','last_login')
+        exclude = ('password','is_admin','is_active','last_login')
         read_only_fields = ('email',)
 
     def validate(self, attrs):
