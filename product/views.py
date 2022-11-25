@@ -1,11 +1,11 @@
 from rest_framework.views import APIView
-from product.models import Products, Comments, Categories, User_image
-from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer
+from product.models import Products, Comments, Categories, User_image, MachineLearning
+from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, MachineLearningSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.generics import get_object_or_404
-from product.shirt import get_result_shirt,model
+from product.deeplearning import get_result_shirt,model
 import cv2
 import base64
 from django.db.models import Q
@@ -28,13 +28,6 @@ class ProductView(APIView):
         return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
 
 # 머신러닝
-class MachineRunningView(APIView):
-    def post(self, request):
-        img = cv2.imread(f'{request.data["image"]}')
-        jpg_img = cv2.imencode('.jpg', img)
-        b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
-        return Response({"image": b64_string})
-
 # 상품 생성
 class ProductCreateView(APIView):
     permission_classes=[permissions.IsAuthenticated]
@@ -65,6 +58,7 @@ class ProductDetailView(APIView):
 
 class ProductCreateView(APIView):
     permission_classes=[permissions.IsAuthenticated]
+
     def post(self, request):
             serializer = ProductCreateSerializer(data=request.data)
             if serializer.is_valid():
@@ -74,14 +68,17 @@ class ProductCreateView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MachineRunningView(APIView):
+class MachineLearningView(APIView):
+
     def post(self, request):
-        serializer = ProductCreateSerializer(data=request.data)
+
+        serializer = MachineLearningSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
-            img_url=model(serializer.data["image"],serializer.data["model"])
+            img_url=model(serializer.data["image"], serializer.data["model"])
             get_result_shirt(img_url,serializer.data["category"])
-            return Response({"data":serializer.data,"message":"이미지전송 성공"}, status=status.HTTP_201_CREATED)
+            return Response({"data":serializer.data, "message":"이미지전송 성공"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

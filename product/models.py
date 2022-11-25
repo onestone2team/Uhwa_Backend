@@ -32,7 +32,9 @@ class User_image(models.Model):
     user_image=models.ImageField(upload_to='%y/%m/')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
 
-class MachineRunning(models.Model):
+class MachineLearning(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='%y/%m/')
-    model=models.CharField(max_length=50, blank=True, null=True)
+    image = models.ImageField(upload_to='output')
+    model = models.CharField(max_length=50)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    # image = models.ImageField()
