@@ -1,4 +1,3 @@
-from rest_framework import status
 from order.models import Orders
 from rest_framework import serializers
 
@@ -10,8 +9,8 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class AddOrderListSerializer(serializers.ModelSerializer):
-    class Meta:
 
+    class Meta:
         model = Orders
         fields = ("price", "size", "count")
 

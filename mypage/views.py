@@ -1,43 +1,57 @@
 from rest_framework.views import APIView
 from rest_framework import permissions
 from product.models import Products
-from mypage.serializer import BookmarkSerializer, MyProductListSerializer, ProfileMyOrderlistSerializer
+from user.models import Users
+from mypage.serializers import MyBookmarkListSerializer, MyProductListSerializer, MyOrderListSerializer
+from user.serializers import UserProfileSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from product.models import Products
 from order.models import Orders
 from rest_framework.generics import get_object_or_404
-# Create your views here.
-class ProfileView(APIView):             #회원 정보 확인 및 수정
 
+
+#회원 정보 확인 및 수정
+class ProfileView(APIView):             
     def get(self, request):
-        pass
+        profile = Users.objects.get(id=request.user.id)
+        serializer = UserProfileSerializer(profile)
+        return Response(serializer.data)
+    def put(self,request):
+        profile=Users.objects.get(id=request.user.id)
+        profile_update = dict()
+        for key, value in request.data.items():
+            if value:
+                profile_update.update({key:value})
+        
+        profile_serializer = UserProfileSerializer(profile, data=profile_update, partial=True)
+        if profile_serializer.is_valid(raise_exception=True):
+            profile_serializer.save()
+            return Response({"data":profile_serializer.data,"message":"프로필 수정 완료"}, status=status.HTTP_201_CREATED)
+        return Response({"message":"저장되지 않았습니다. 다시 시도해주세요"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request):
-        pass
-
-class ProfileBookmark(APIView):         #bookmarklist/ 찜한 상품 리스트
+#bookmarklist/ 찜한 상품 리스트
+class MyBookmarkView(APIView):         
     permission_classes=[permissions.IsAuthenticated]
 
     def get(self, request):
         bookmark_list = Products.objects.filter(bookmark=request.user.id)
         if bookmark_list:
-            serializer = BookmarkSerializer(bookmark_list, many=True)
+            serializer = MyBookmarkListSerializer(bookmark_list, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"message":"잘못된 접근입니다!"}, status=status.HTTP_400_BAD_REQUEST)
 
-
-class ProfileMyProducts(APIView):       #myproducts/ 내가 만든 상품 리스트
-
+#myproducts/ 내가 만든 상품 리스트
+class MyProductsView(APIView):      
     def get(self, request):
         product = Products.objects.filter(user_id=request.user.id)
         serializer = MyProductListSerializer(product, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class ProfileMyOrderlis(APIView):      #myorderlist/ 나의 주문 목록
-
+#myorderlist/ 나의 주문 목록
+class MyOrderlistView(APIView):      
     def get(self, request):
         product = Orders.objects.filter(user_id=request.user.id)
-        serializer = ProfileMyOrderlistSerializer(product, many=True)
+        serializer = MyOrderListSerializer(product, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
