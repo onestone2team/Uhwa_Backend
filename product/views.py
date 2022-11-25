@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework import permissions
 from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
 from rest_framework.generics import get_object_or_404
-
+from product.shirt import get_result_shirt,model
 # Create your views here.
 
 
@@ -33,12 +33,19 @@ class DeleteProductView(APIView):
         return Response({"message":"삭제되었습니다!"}, status=status.HTTP_200_OK)
 
 class ProductCreateView(APIView):
-    # permission_classes=[permissions.IsAuthenticated]
+    permission_classes=[permissions.IsAuthenticated]
+    
     def post(self, request):
+        print(request.data)
         serializer = ProductsCreateSerializer(data=request.data)
+        
         if serializer.is_valid():
             serializer.save(user=request.user)
-            return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+            img_url=model(serializer.data["image"],serializer.data["model"])
+            print("1")
+            get_result_shirt(img_url,serializer.data["category"])
+            print("2")
+            return Response({"data":serializer.data,"message":"이미지전송 성공"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

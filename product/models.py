@@ -14,6 +14,7 @@ class Categories(models.Model):
 class Products(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
+    model=models.CharField(max_length=50, blank=True, null=True)
     image = models.ImageField(upload_to='%y/%m/')
     hide_option = models.BooleanField(default=False)
     bookmark = models.ManyToManyField(Users, related_name = 'add_bookmark', blank=True)
