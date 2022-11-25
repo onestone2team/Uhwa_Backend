@@ -38,7 +38,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     #     return "안돼에에ㅔㅔ"
 
 class CategorySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Categories
         fields = "__all__"

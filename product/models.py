@@ -31,3 +31,7 @@ class Comments(models.Model):
 class User_image(models.Model):
     user_image=models.ImageField(upload_to='%y/%m/')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
+
+class MachineRunning(models.Model):
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='%y/%m/')
