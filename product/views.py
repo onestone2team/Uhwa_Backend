@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from product.models import Products, Comments, Categories, User_image
-from product.serializers import ProductCreateSerializer, ProductsDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, UserimagesaveSerializer
+from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, UserimagesaveSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,7 +22,7 @@ class ProductView(APIView):         # main 페이지 내 전체 데이터 불러
         pagination.page_query_param = "pages"
         products = Products.objects.all()
         p = pagination.paginate_queryset(queryset=products, request=request)
-        serializer = ProductsSerializer(p, many=True)
+        serializer = ProductSerializer(p, many=True)
         return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
 
 # 상품 생성
@@ -49,7 +49,7 @@ class ProductDeleteView(APIView):
 class ProductCreateView(APIView):
     permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
-            serializer = ProductsCreateSerializer(data=request.data)
+            serializer = ProductCreateSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(user_id=request.user.id)
                 return Response({"data": serializer.data, "message": "생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
@@ -146,5 +146,5 @@ class ProductDetail(APIView):       # <int:product_id>/ 제품 상세 페이지
 
     def get(self, request, product_id):
         product = get_object_or_404(Products, id=product_id)
-        serializer = ProductsDetailSerializer(product)
+        serializer = ProductDetailSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)

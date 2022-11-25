@@ -16,7 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Products
         fields = "__all__"
 
-class ProductsDetailSerializer(serializers.ModelSerializer):
+class ProductDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     comment_set = serializers.SerializerMethodField()
 
