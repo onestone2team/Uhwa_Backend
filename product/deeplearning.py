@@ -4,46 +4,48 @@ import numpy as np
 from PIL import Image
 # print(os.path.abspath("starry_night.t7"))
 def model(userimage,model):
+    
     # "C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend"+
-    overlay = cv2.imread("C:/Users/dd/Desktop/a2_style_transfer/"+userimage)
+    model_list=["candy","feathers","mosaic","la_muse","starry_night","the_scream","udnie"]
+    overlay = cv2.imread(userimage[1:])
     # C:\Users\BeomKi\Desktop\asdasfsgd\Uhwa_Backend\11
     # /media/22/11/di2_ZO9NFbc.jpeg
-
+    if model in model_list:
 # ------------------------------------- overlay model 적용 시작 ---------------------------------------------------------------
     # "candy""feathers""mosaic""la_muse""starry_night""the_scream""udnie"
-    net = cv2.dnn.readNetFromTorch('C:/Users/dd/Desktop/a2_style_transfer/product/models/instance_norm/'+model+'.t7')
-    # C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend/starry_night.t7
-    # 모델을 바꾸고싶으면 경로변경
-    # 위 세가지는 유저가 변경가능
-    # 11~24번쨰줄까지는 수정하지마세요
-    MEAN_VALUE = [103.939, 116.779, 123.680]
-    #이 모델의 가장성능이 좋은 값
-    blob = cv2.dnn.blobFromImage(overlay, mean=MEAN_VALUE)
-    #전처리 하는데 차원변형
-    net.setInput(blob)
-    overlay = net.forward()
-    overlay = overlay.squeeze().transpose((1, 2, 0))
-    # 사람이 이해하기쉽게 후처리 시작
+        net = cv2.dnn.readNetFromTorch('product/models/instance_norm/'+model+'.t7')
+        # C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend/starry_night.t7
+        # 모델을 바꾸고싶으면 경로변경
+        # 위 세가지는 유저가 변경가능
+        # 11~24번쨰줄까지는 수정하지마세요
+        MEAN_VALUE = [103.939, 116.779, 123.680]
+        #이 모델의 가장성능이 좋은 값
+        blob = cv2.dnn.blobFromImage(overlay, mean=MEAN_VALUE)
+        #전처리 하는데 차원변형
+        net.setInput(blob)
+        overlay = net.forward()
+        overlay = overlay.squeeze().transpose((1, 2, 0))
+        # 사람이 이해하기쉽게 후처리 시작
 
-    overlay += MEAN_VALUE
-    overlay = np.clip(overlay, 0, 255)
-    overlay = overlay.astype('uint8')
-    cv2.imwrite("C:/Users/dd/Desktop/a2_style_transfer/"+userimage,overlay)
-    return "C:/Users/dd/Desktop/a2_style_transfer/"+userimage
-
+        overlay += MEAN_VALUE
+        overlay = np.clip(overlay, 0, 255)
+        overlay = overlay.astype('uint8')
+        cv2.imwrite(userimage[1:],overlay)
+        return userimage
+    else:
+        cv2.imwrite(userimage[1:],overlay)
+        return  userimage
 
 
 def get_result_shirt(img_read,category):
-    print(category)
     if category ==1:
         category ="shirt"
     elif category ==2:
         category ="cap"
     elif category ==3:
         category="Hood"
-    print(category)
-    Backgrund= cv2.imread("C:/Users/dd/Desktop/a2_style_transfer/product/base_image/"+category+".png")
-    overlay=cv2.imread(img_read)
+    Backgrund= cv2.imread("product/base_image/"+category+".png")
+    overlay=cv2.imread(img_read[1:])
     # -------------------------------------업로드 이미지(.png) 배경 지우기  시작 ---------------------------------------------------------------
     if category =="shirt":
         overlay = cv2.resize(overlay, dsize=(400,450))
@@ -82,6 +84,6 @@ def get_result_shirt(img_read,category):
     # Backgrund[mask] = shapes[mask]
     Backgrund[mask] = cv2.addWeighted(shapes, alpha, shapes, 1 - alpha, 0)[mask]
     url=img_read.split("/")[-1]
-    cv2.imwrite("C:/Users/dd/Desktop/a2_style_transfer/media/output/"+url,Backgrund)
+    cv2.imwrite("media/output/"+url,Backgrund)
 
 
