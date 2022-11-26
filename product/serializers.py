@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from product.models import Products, Categories,User_image,Comments
+from user.serializers import UserCommentSerializer
 import cv2
 import base64
 
@@ -56,16 +57,17 @@ class UserimagesaveSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class CommentsSerializer(serializers.ModelSerializer):
-    user =serializers.SerializerMethodField()
-
-    def get_user(self, obj):
-        return obj.user.email
-
+    user=UserCommentSerializer()
     class Meta:
         model = Comments
         fields = ("comment", "grade", "user", "created_at")
-
-
+    
+class CommentCreateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Comments
+        fields = ("comment", "grade",)
+    
 class ProductDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     comments_set = CommentsSerializer(many=True)
@@ -73,8 +75,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.email
 
-    # def get_comment_set(self, obj):
-    #     return obj.comment_set.comment
     class Meta:
         model = Products
-        fields = ("user", "image", "bookmark", "comments_set")
+        fields = ("user", "image", "bookmark","comments_set" )
+        
