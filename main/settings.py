@@ -85,7 +85,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'main.urls'
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {
