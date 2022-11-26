@@ -102,7 +102,7 @@ class ProductComment(APIView):      # 상세 페이지내 댓글 생성
 class CommentDetailView(APIView):
     def put(self, request, product_id, comment_id):
         comment = get_object_or_404(Comments, id=comment_id)
-        serializer = CommentsSerializer(comment, data=request.data)
+        serializer = CommentCreateSerializer(comment, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "해당 글이 수정되었습니다.", "data": serializer.data}, status=status.HTTP_201_CREATED)
