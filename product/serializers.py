@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from product.models import Products, Categories,User_image,Comments
 from user.serializers import UserCommentSerializer
+from product.models import Products, Categories, User_image, Comments, MachineLearning
+
 import cv2
 import base64
 
@@ -26,29 +27,14 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ("user", "image")
+        fields = ("user", "image", "category", "hide_option")
 
-    # def create(self, validated_data):
-    #     print(validated_data)
-    #     img = cv2.imread(validated_data.image)
-    #     jpg_img = cv2.imencode('.jpg', img)
-    #     b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
-    #     print(b64_string)
-    #     return "안돼에에ㅔㅔ"
 
 class CategorySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Categories
         fields = "__all__"
-
-
-# class MachineRunningSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Categories
-#         fields = ("image",)
-
 
 class UserimagesaveSerializer(serializers.ModelSerializer):
 
@@ -60,10 +46,9 @@ class CommentsSerializer(serializers.ModelSerializer):
     user=UserCommentSerializer()
     class Meta:
         model = Comments
-        fields = ("comment", "grade", "user", "created_at")
+        fields = ("id", "comment", "grade", "user", "created_at")
     
 class CommentCreateSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Comments
         fields = ("comment", "grade",)
@@ -77,5 +62,19 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ("user", "image", "bookmark","comments_set" )
-        
+        fields = ( "user", "image", "bookmark", "comments_set")
+
+class MachineLearningSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MachineLearning
+        fields = ("model", "category", "image")
+
+    # def create(self, validated_data):
+    #     print()
+    #     print(validated_data)
+    #     img = cv2.imread(validated_data.image)
+    #     jpg_img = cv2.imencode('.jpg', img)
+    #     b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
+    #     print(b64_string)
+    #     return "안돼에에ㅔㅔ"
+
