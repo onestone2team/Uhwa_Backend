@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from product.models import Products, Categories, Comments, MachineLearning
+from user.serializers import UserCommentSerializer
+from product.models import Products, Categories, User_image, Comments, MachineLearning
+
 import cv2
 import base64
 
@@ -36,16 +38,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CommentsSerializer(serializers.ModelSerializer):
-    user =serializers.SerializerMethodField()
-
-    def get_user(self, obj):
-        return obj.user.email
-
+    user=UserCommentSerializer()
     class Meta:
         model = Comments
-        fields = ("comment", "grade", "user", "created_at")
-
-
+        fields = ("id", "comment", "grade", "user", "created_at")
+    
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ("comment", "grade",)
+    
 class ProductDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     comments_set = CommentsSerializer(many=True)
@@ -55,11 +57,10 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ("user", "image", "bookmark", "comments_set")
+        fields = ( "user", "image", "bookmark", "comments_set")
 
 
 class MachineLearningSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MachineLearning
         fields = ("model", "category", "image")

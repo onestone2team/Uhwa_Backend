@@ -39,6 +39,7 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['is_admin'] = user.is_admin
         token['address'] = user.address
+        token['profile'] = user.profile
         return token
 
 class UserInactiveSerializer(serializers.ModelSerializer):
@@ -82,3 +83,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+<<<<<<< HEAD
+=======
+class UserCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields=('profile','profilename',)
+>>>>>>> 75292d63c9370efefb3384e358d85e9b92d36fe9
