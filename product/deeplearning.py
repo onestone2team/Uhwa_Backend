@@ -38,14 +38,12 @@ def model(userimage,model):
 
 
 def get_result_shirt(img_read,category):
-    print(category)
     if category ==1:
         category ="shirt"
     elif category ==2:
         category ="cap"
     elif category ==3:
         category="Hood"
-    print(category)
     Backgrund= cv2.imread("product/base_image/"+category+".png")
     overlay=cv2.imread(img_read[1:])
     # -------------------------------------업로드 이미지(.png) 배경 지우기  시작 ---------------------------------------------------------------
