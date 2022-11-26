@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from product.models import Products, Comments, Categories, User_image
-from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, UserimagesaveSerializer
+from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, CommentCreateSerializer, UserimagesaveSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -63,9 +63,9 @@ class ProductCommentView(APIView):
     def post(self, request, product_id, format=None):
         comment = Comments.objects.filter(Q(user_id=request.user.id) & Q(product_id=product_id))
         if comment.count() < 1:
-            serializer = CommentsSerializer(data=request.data)
+            serializer = CommentCreateSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save(product_id=product_id, user_id=request.user.id)
+                serializer.save(product_id=product_id, user=request.user)
                 return Response({"message": "해당 글이 생성되었습니다.", "data": serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
