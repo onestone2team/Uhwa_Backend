@@ -88,7 +88,42 @@
 
   <br/>
   
-  <코드리뷰>
+  <트러블슈팅>
+ <details>
+    <summary>안범기</summary>
+    <img src=https://user-images.githubusercontent.com/105624323/204091176-9e5f753e-bfb1-4f71-931e-3d78b4d61c80.png>
+    <br>머신러닝을 돌릴 때와 글 작성할때 필요한 인자 값이 달라서 각 각의 serializer을 생성
+    <br><img src=https://user-images.githubusercontent.com/105624323/204091287-f0575fa1-a443-409e-a7ae-2d47eb220d2f.png>    
+    <br><img src=https://user-images.githubusercontent.com/105624323/204091446-2b5b7d92-69ab-4566-9834-d47ad744f905.png>    
+    <br>절대경로로 만들어서 깃에 올릴떄마다 변경해주어야하는 불편했던것을   
+    <br><img src=https://user-images.githubusercontent.com/105624323/204091515-7042f383-6250-4c2c-a080-be8956ba76ad.png>   
+    <br>슬라이싱을이용해서 팀원마다 경로 설정안하게 변경
+    <br>
+    <br>배포시 생기는 오류:libGL.so.1: cannot open shared object file: No such file or directory
+    <br>오류 원인: opencv module이 설치되어있지 않아서 생기는 오류
+    <br>DockerFile에
+    <br>RUN apt-get update
+    <br>RUN apt-get -y install libgl1-mesa-glx
+    <br>넣으면 해결
+    <br><img src=https://user-images.githubusercontent.com/105624323/204092285-06ee0c7a-d1f6-48c0-b2da-a2988eb4e3e8.png>
+    
+ </details>
+ <details>
+    <summary>박효진</summary>
+    여기에 작성해주세요
+ </details>
+ <details>
+    <summary>장준표</summary>
+    여기에 작성해주세요
+ </details>
+ <details>
+    <summary>김명현</summary>
+    여기에 작성해주세요
+ </details>
+ <details>
+    <summary>유승주</summary>
+    여기에 작성해주세요
+ </details>
   
   
 
