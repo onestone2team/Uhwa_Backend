@@ -35,11 +35,8 @@ class MyBookmarkView(APIView):
 
     def get(self, request):
         bookmark_list = Products.objects.filter(bookmark=request.user.id)
-        if bookmark_list:
-            serializer = MyBookmarkListSerializer(bookmark_list, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"message":"잘못된 접근입니다!"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = MyBookmarkListSerializer(bookmark_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 #myproducts/ 내가 만든 상품 리스트
 class MyProductsView(APIView):      

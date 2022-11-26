@@ -7,7 +7,7 @@ class OrderListSerializer(serializers.ModelSerializer):
     product=ProductSerializer()
     class Meta:
         model = Orders
-        fields = "__all__"
+        fields = ("price", "size", "count", "product", "created_at", "user")
 
 
 class AddOrderListSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class AddOrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
-        fields = ("price", "size", "count", "product")
+        fields = ("price", "size", "count", "product", "created_at")
 
 
 class ChangeOrderStatusSerializer(serializers.ModelSerializer):

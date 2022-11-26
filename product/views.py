@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
-from product.models import Products, Comments, Categories, User_image, MachineLearning
+from product.models import Products, Comments, Categories, MachineLearning
 from product.serializers import (ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, 
                                  CommentsSerializer, CommentCreateSerializer, 
-                                 UserimagesaveSerializer, MachineLearningSerializer)
+                                 MachineLearningSerializer)
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
@@ -17,13 +17,14 @@ from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissi
 
 
 
+
 # main 페이지 내 전체 데이터 불러오기
 class ProductView(APIView):
     def get(self, request):
         pagination = PageNumberPagination()
         pagination.page_size = 9
         pagination.page_query_param = "page"
-        products = Products.objects.all()
+        products = Products.objects.all().order_by("-created_at")
 
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)
@@ -73,7 +74,6 @@ class ProductCreateView(APIView):
 class MachineLearningView(APIView):
 
     def post(self, request):
-
         serializer = MachineLearningSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -84,10 +84,9 @@ class MachineLearningView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class ProductComment(APIView):      # 상세 페이지내 댓글 생성
     def post(self, request, product_id, format=None):
-        comment = Comments.objects.filter(Q(user_id=request.user.id) & Q(product_id=product_id))
+        comment = Comments.objects.filter(Q(user_id=request.user.id) & Q(product_id=product_id)).order_by("-created_at")
         if comment.count() < 1:
             serializer = CommentCreateSerializer(data=request.data)
             if serializer.is_valid():
@@ -110,7 +109,7 @@ class CommentDetailView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, product_id, comment_id):
-        comment = get_object_or_404(Comments, id=comment_id)
+        comment = Comments.objects.filter(Q(user_id=request.user.id) & Q(id=comment_id))
         comment.delete()
         return Response({"message": "해당 글이 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
 
@@ -145,4 +144,38 @@ class CategoryView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ShirtView(APIView):
 
+    def get(self, request):
+        pagination = PageNumberPagination()
+        pagination.page_size = 9
+        pagination.page_query_param = "page"
+        products = Products.objects.filter(category_id=1).order_by("-created_at")
+
+        p = pagination.paginate_queryset(queryset=products, request=request)
+        serializer = ProductSerializer(p, many=True)
+        return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
+
+class CapView(APIView):
+
+    def get(self, request):
+        pagination = PageNumberPagination()
+        pagination.page_size = 9
+        pagination.page_query_param = "page"
+        products = Products.objects.filter(category_id=2).order_by("-created_at")
+
+        p = pagination.paginate_queryset(queryset=products, request=request)
+        serializer = ProductSerializer(p, many=True)
+        return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
+
+class HoodView(APIView):
+
+    def get(self, request):
+        pagination = PageNumberPagination()
+        pagination.page_size = 9
+        pagination.page_query_param = "page"
+        products = Products.objects.filter(category_id=3).order_by("-created_at")
+
+        p = pagination.paginate_queryset(queryset=products, request=request)
+        serializer = ProductSerializer(p, many=True)
+        return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)

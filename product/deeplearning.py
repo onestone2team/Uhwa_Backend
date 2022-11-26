@@ -67,6 +67,7 @@ def get_result_shirt(img_read,category):
         shapes[125+0:h+125, 250+0:w+250] = overlay
         alpha = 0.5
         mask = shapes.astype(bool)
+
     elif category=="Hood":
         overlay = cv2.resize(overlay, dsize=(300,250))
         h, w ,c = overlay.shape
@@ -76,7 +77,7 @@ def get_result_shirt(img_read,category):
         shapes[240+0:h+240, 200+0:w+200] = overlay
         alpha = 0.5
         mask = shapes.astype(bool)
-        
+
     # # -------------------------------------업로드 이미지(.png) 배경 지우기 끝---------------------------------------------------------------
     # # -------------------------------------이미지 색상 변경 시작 ---------------------------------------------------------------
 
