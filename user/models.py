@@ -26,7 +26,6 @@ class MyUserManager(BaseUserManager):
             profilename=profilename
             # profilename=profilename,
         )
-       
         instance.set_password(password)
         instance.save(using=self._db)
         return instance

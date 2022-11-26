@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from product.models import Products, Comments, Categories, User_image, MachineLearning
+from product.models import Products, Comments, Categories, MachineLearning
 from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, MachineLearningSerializer
 from rest_framework.response import Response
 from rest_framework import status

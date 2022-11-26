@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__'
+
     def validate(self, attrs):
         is_password = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$')
         if not is_password.fullmatch(attrs['password']):
@@ -53,7 +54,7 @@ class UserInactiveSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        exclude = ('password','is_admin','is_active','last_login')
+        exclude = ('is_admin','is_active','last_login')
         read_only_fields = ('email',)
 
     def validate(self, attrs):
@@ -61,20 +62,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if 'password' in attrs:
             is_password = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$')
             if not is_password.fullmatch(attrs['password']):
-                raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")   
+                raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")
         # 핸드폰 번호
         if 'phone' in attrs:
             phone_valid = phonevalidator(attrs['phone'])
             if phone_valid == False:
                 raise serializers.ValidationError("유효하지 않은 형식입니다. 다시 입력해주세요.")
         return super().validate(attrs)
-        
-    def update(self, instance, validated_data): 
+
+    def update(self, instance, validated_data):
+        print(instance.password)
         instance.email = validated_data.get('email', instance.email)
         instance.profile = validated_data.get('profile', instance.profile)
         instance.profilename = validated_data.get('profilename', instance.profilename)
-        instance.set_password(validated_data.get('password', instance.password))
+        if "password" in validated_data:
+            instance.set_password(validated_data.get('password', instance.password))
         instance.address = validated_data.get('address', instance.address)
         instance.phone = validated_data.get('phone', instance.phone)
         instance.save()
         return instance
+
