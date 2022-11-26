@@ -1,8 +1,10 @@
 from order.models import Orders
 from rest_framework import serializers
+from product.serializers import ProductSerializer
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+    product=ProductSerializer()
     class Meta:
         model = Orders
         fields = "__all__"

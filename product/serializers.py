@@ -46,10 +46,9 @@ class CommentsSerializer(serializers.ModelSerializer):
     user=UserCommentSerializer()
     class Meta:
         model = Comments
-        fields = ("comment", "grade", "user", "created_at")
+        fields = ("id", "comment", "grade", "user", "created_at")
     
 class CommentCreateSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Comments
         fields = ("comment", "grade",)
@@ -63,7 +62,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ("user", "image", "bookmark", "comments_set")
+        fields = ( "user", "image", "bookmark", "comments_set")
+
 
 class MachineLearningSerializer(serializers.ModelSerializer):
     class Meta:

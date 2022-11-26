@@ -15,10 +15,8 @@ class MyProductListSerializer(serializers.ModelSerializer):
 
 class MyOrderListSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
-
-
-
     class Meta:
         model = Orders
-        fields = ("user", "product", "count", "size", "product")
+        fields = ("user", "product", "count", "size", "product", "price", "order_status")
+
 
