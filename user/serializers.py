@@ -38,6 +38,7 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['is_admin'] = user.is_admin
         token['address'] = user.address
+        token['profile'] = user.profile
         return token
 
 class UserInactiveSerializer(serializers.ModelSerializer):
@@ -47,7 +48,7 @@ class UserInactiveSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if instance.is_active == True:
             instance.is_active = False
-        instance.save() 
+        instance.save()
         return instance
 
 class UserProfileSerializer(serializers.ModelSerializer):
