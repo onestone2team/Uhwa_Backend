@@ -64,6 +64,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         model = Products
         fields = ( "user", "image", "bookmark", "comments_set")
 
+
 class MachineLearningSerializer(serializers.ModelSerializer):
     class Meta:
         model = MachineLearning

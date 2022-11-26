@@ -8,7 +8,7 @@ from django.contrib.auth.models import (
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, profilename, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -23,6 +23,7 @@ class MyUserManager(BaseUserManager):
 
         instance = self.model(
             email=email,
+            profilename=profilename
             # profilename=profilename,
         )
        
@@ -37,8 +38,8 @@ class MyUserManager(BaseUserManager):
         """
         instance = self.create_user(
             email = email,
-            # profilename = profilename,
-            password = password,
+            password=password,
+            profilename=profilename
         )
         instance.is_admin = True
         instance.save(using=self._db)
@@ -49,7 +50,7 @@ class Users(AbstractBaseUser):
     email = models.EmailField('이메일', unique=True, error_messages={"unique":"이미 사용중인 이메일입니다"})
     password = models.CharField('비밀번호',max_length=30)
     profile = models.ImageField('프로필 사진',upload_to='%y/%m/', default='basic_profile/guest.png')
-    profilename = models.CharField('회원이름',max_length=30, unique=True, error_messages={"unique":"이미 사용중인 닉네임입니다"})
+    profilename = models.CharField('회원이름',max_length=30,error_messages={"unique":"profilename은 필수항목입니다"})
     # address = AddressField('배송지',max_length=100,blank=True, default='sth' )
     address = models.TextField('배송지',blank=True, default='-')
     phone = models.CharField('연락처',max_length=30,blank=True, default='-')
