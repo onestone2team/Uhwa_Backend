@@ -31,8 +31,9 @@ def get_secret(setting):
 
 SECRET_KEY = get_secret("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# 환경변수에 따라 DEBUG모드 여부를 결정합니다.
+# # SECURITY WARNING: don't run with debug turned on in production!
+# # 환경변수에 따라 DEBUG모드 여부를 결정합니다.
+# DEBUG = True
 DEBUG = os.environ.get('DEBUG', '0') == '1'
 
 # 접속을 허용할 host를 설정합니다.
@@ -220,6 +221,8 @@ SIMPLE_JWT = {
 
 DATE_INPUT_FORMATS = ["%d-%m-%Y"]
 
+
+# CORS_ORIGIN_ALLOW_ALL = True
 # CORS 허용 목록에 ec2 ip를 추가합니다.
 CORS_ORIGIN_WHITELIST = ['http://$ec2_public_ip']
 # ex) CORS_ORIGIN_WHITELIST = ['http://43.201.72.190']

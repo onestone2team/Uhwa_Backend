@@ -39,7 +39,6 @@ class CustomedUserSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['is_admin'] = user.is_admin
         token['address'] = user.address
-        token['profile'] = user.profile
         return token
 
 class UserInactiveSerializer(serializers.ModelSerializer):

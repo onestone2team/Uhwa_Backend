@@ -14,6 +14,9 @@ urlpatterns = [
     path('<int:product_id>/comment/', views.ProductComment.as_view(), name='comment_create'),
     path('<int:product_id>/comment/<int:comment_id>/', views.CommentDetailView.as_view(), name='comment_detail'),
     path('category/', views.CategoryView.as_view(), name="category_view"),
+    path('shirt/', views.ShirtView.as_view(), name="shirt_view"),
+    path('cap/', views.CapView.as_view(), name="cap_view"),
+    path('hood/', views.HoodView.as_view(), name="hood_view"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

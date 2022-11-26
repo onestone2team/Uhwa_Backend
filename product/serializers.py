@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from user.serializers import UserCommentSerializer
-from product.models import Products, Categories, User_image, Comments, MachineLearning
+from product.models import Products, Categories, Comments, MachineLearning
 
 import cv2
 import base64
@@ -64,3 +64,4 @@ class MachineLearningSerializer(serializers.ModelSerializer):
     class Meta:
         model = MachineLearning
         fields = ("model", "category", "image")
+        
