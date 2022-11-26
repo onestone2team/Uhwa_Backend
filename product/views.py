@@ -75,7 +75,6 @@ class ProductCommentView(APIView):
 # 댓글 수정 및 삭제 기능
 class CommentDetailView(APIView):       
     def put(self, request, product_id, comment_id):
-
         comment = get_object_or_404(Comments, id=comment_id)
         serializer = CommentsSerializer(comment, data=request.data)
         if serializer.is_valid():
