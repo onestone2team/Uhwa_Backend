@@ -78,3 +78,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         instance.phone = validated_data.get('phone', instance.phone)
         instance.save()
         return instance
+
+class UserCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields=('profile','profilename',)
