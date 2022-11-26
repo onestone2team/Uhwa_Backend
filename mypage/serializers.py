@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from product.models import Products
-
+from order.models import Orders
+from product.serializers import ProductSerializer
 
 class MyBookmarkListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,9 @@ class MyProductListSerializer(serializers.ModelSerializer):
         fields = ("id", "user_id", "hide_option", "image")
 
 class MyOrderListSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
     class Meta:
-        model = Products
-        fields = "__all__"
+        model = Orders
+        fields = ("user", "product", "count", "size", "product", "price", "order_status")
+
