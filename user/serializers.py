@@ -47,7 +47,7 @@ class UserInactiveSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if instance.is_active == True:
             instance.is_active = False
-        instance.save() 
+        instance.save()
         return instance
 
 class UserProfileSerializer(serializers.ModelSerializer):

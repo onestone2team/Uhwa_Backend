@@ -1,36 +1,35 @@
 from rest_framework.views import APIView
-from product.models import Products, Comments, Categories, User_image
-from product.serializers import ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, CommentsSerializer, CommentCreateSerializer, UserimagesaveSerializer
-from rest_framework.pagination import PageNumberPagination
+from product.models import Products, Comments, Categories, User_image, MachineLearning
+from product.serializers import (ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, 
+                                 CommentsSerializer, CommentCreateSerializer, 
+                                 UserimagesaveSerializer, MachineLearningSerializer)
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
 from rest_framework.generics import get_object_or_404
+from product.deeplearning import get_result_shirt,model
 import cv2
 import base64
 from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+from product.permissions import IsAdminOrAuthenticatedOrReadOnly, DeletePermissition
+
+
 
 
 # main 페이지 내 전체 데이터 불러오기
-class ProductView(APIView):        
+class ProductView(APIView):
     def get(self, request):
         pagination = PageNumberPagination()
         pagination.page_size = 9
-        pagination.page_query_param = "pages"
+        pagination.page_query_param = "page"
         products = Products.objects.all()
+
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)
         return Response({"data": serializer.data, "max_page": len(products)//9 + 1}, status=status.HTTP_200_OK)
 
 # 머신러닝
-class MachineRunningView(APIView):
-    def post(self, request):
-        img = cv2.imread(f'{request.data["image"]}')
-        jpg_img = cv2.imencode('.jpg', img)
-        b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
-        return Response({"image": b64_string})
-
 # 상품 생성
 class ProductCreateView(APIView):
     permission_classes=[permissions.IsAuthenticated]
@@ -38,7 +37,7 @@ class ProductCreateView(APIView):
         serializer = ProductCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
-            return Response({"data":serializer.data, "message":"생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+            return Response({"data":serializer.data,"message":"이미지전송 성공"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -52,14 +51,41 @@ class ProductDeleteView(APIView):
         return Response({"message": "삭제되었습니다!"}, status=status.HTTP_200_OK)
 
 # <int:product_id>/ 제품 상세 페이지
-class ProductDetailView(APIView):      
+class ProductDetailView(APIView):
     def get(self, request, product_id):
         product = get_object_or_404(Products, id=product_id)
         serializer = ProductDetailSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# 상세 페이지내 댓글 생성
-class ProductCommentView(APIView):      
+
+class ProductCreateView(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+
+    def post(self, request):
+            serializer = ProductCreateSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user_id=request.user.id)
+                return Response({"data": serializer.data, "message": "생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MachineLearningView(APIView):
+
+    def post(self, request):
+
+        serializer = MachineLearningSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            img_url=model(serializer.data["image"], serializer.data["model"])
+            get_result_shirt(img_url,serializer.data["category"])
+            return Response({"data":serializer.data, "message":"이미지전송 성공"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ProductComment(APIView):      # 상세 페이지내 댓글 생성
     def post(self, request, product_id, format=None):
         comment = Comments.objects.filter(Q(user_id=request.user.id) & Q(product_id=product_id))
         if comment.count() < 1:
@@ -73,7 +99,7 @@ class ProductCommentView(APIView):
             return Response({"message":"댓글은 하나만 등록 할 수 있습니다!"}, status=status.HTTP_400_BAD_REQUEST)
 
 # 댓글 수정 및 삭제 기능
-class CommentDetailView(APIView):       
+class CommentDetailView(APIView):
     def put(self, request, product_id, comment_id):
 
         comment = get_object_or_404(Comments, id=comment_id)
@@ -117,7 +143,7 @@ class CategoryView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
