@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from product.models import Products, Comments, Categories, MachineLearning
 from product.serializers import (ProductCreateSerializer, ProductDetailSerializer, ProductSerializer, CategorySerializer, 
-                                 CommentsSerializer, CommentCreateSerializer, 
+                                 CommentsSerializer, CommentCreateSerializer,
                                  MachineLearningSerializer)
 from rest_framework.response import Response
 from rest_framework import status
@@ -24,7 +24,7 @@ class ProductView(APIView):
         pagination = PageNumberPagination()
         pagination.page_size = 9
         pagination.page_query_param = "page"
-        products = Products.objects.all().order_by("-created_at")
+        products = Products.objects.filter(hide_option=0).order_by("-created_at")
 
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)
@@ -150,7 +150,7 @@ class ShirtView(APIView):
         pagination = PageNumberPagination()
         pagination.page_size = 9
         pagination.page_query_param = "page"
-        products = Products.objects.filter(category_id=1).order_by("-created_at")
+        products = Products.objects.filter(Q(category_id=1) & Q(hide_option=0)).order_by("-created_at")
 
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)
@@ -162,7 +162,7 @@ class CapView(APIView):
         pagination = PageNumberPagination()
         pagination.page_size = 9
         pagination.page_query_param = "page"
-        products = Products.objects.filter(category_id=2).order_by("-created_at")
+        products = Products.objects.filter(Q(category_id=2) & Q(hide_option=0)).order_by("-created_at")
 
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)
@@ -174,7 +174,7 @@ class HoodView(APIView):
         pagination = PageNumberPagination()
         pagination.page_size = 9
         pagination.page_query_param = "page"
-        products = Products.objects.filter(category_id=3).order_by("-created_at")
+        products = Products.objects.filter(Q(category_id=3) & Q(hide_option=0)).order_by("-created_at")
 
         p = pagination.paginate_queryset(queryset=products, request=request)
         serializer = ProductSerializer(p, many=True)

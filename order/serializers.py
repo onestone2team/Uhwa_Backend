@@ -12,14 +12,13 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 class AddOrderListSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
-    
+
     def get_product(self,obj):
         return obj.product.category_id
 
     class Meta:
         model = Orders
-        fields = ("price", "size", "count", "product", "created_at")
-
+        fields = ("price", "size", "count", "product", "created_at", "order_status")
 
 class ChangeOrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
