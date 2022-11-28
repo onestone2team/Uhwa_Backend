@@ -51,13 +51,14 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 class ProductDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     comments_set = CommentsSerializer(many=True)
-
+    category = serializers.SerializerMethodField()
+    
     def get_user(self, obj):
         return obj.user.email
 
     class Meta:
         model = Products
-        fields = ( "user", "image", "bookmark", "comments_set")
+        fields = ( "user", "image", "bookmark", "comments_set", "category")
 
 
 class MachineLearningSerializer(serializers.ModelSerializer):
