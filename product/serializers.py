@@ -55,6 +55,9 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     
     def get_user(self, obj):
         return obj.user.email
+    
+    def get_category(self, obj):
+        return obj.category.category_price
 
     class Meta:
         model = Products
