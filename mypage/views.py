@@ -12,11 +12,12 @@ from rest_framework.generics import get_object_or_404
 
 
 #회원 정보 확인 및 수정
-class ProfileView(APIView):             
+class ProfileView(APIView):
     def get(self, request):
         profile = Users.objects.get(id=request.user.id)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
+
     def put(self,request):
         profile=Users.objects.get(id=request.user.id)
         profile_update = dict()
@@ -27,10 +28,11 @@ class ProfileView(APIView):
         if profile_serializer.is_valid(raise_exception=True):
             profile_serializer.save()
             return Response({"data":profile_serializer.data,"message":"프로필 수정 완료"}, status=status.HTTP_201_CREATED)
-        return Response({"message":"저장되지 않았습니다. 다시 시도해주세요"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message":"저장되지 않았습니다. 다시 시도해주세요"}, status=status.HTTP_400_BAD_REQUEST)
 
 #bookmarklist/ 찜한 상품 리스트
-class MyBookmarkView(APIView):         
+class MyBookmarkView(APIView):
     permission_classes=[permissions.IsAuthenticated]
 
     def get(self, request):
@@ -39,14 +41,16 @@ class MyBookmarkView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 #myproducts/ 내가 만든 상품 리스트
-class MyProductsView(APIView):      
+class MyProductsView(APIView):
+
     def get(self, request):
         product = Products.objects.filter(user_id=request.user.id)
         serializer = MyProductListSerializer(product, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 #myorderlist/ 나의 주문 목록
-class MyOrderlistView(APIView):      
+class MyOrderlistView(APIView):
+
     def get(self, request):
         product = Orders.objects.filter(user_id=request.user.id)
         serializer = MyOrderListSerializer(product, many=True)

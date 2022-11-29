@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 # print(os.path.abspath("starry_night.t7"))
 def model(userimage,model):
-    
+
     # "C:/Users/BeomKi/Desktop/asdasfsgd/Uhwa_Backend"+
     model_list=["candy","feathers","mosaic","la_muse","starry_night","the_scream","udnie"]
     overlay = cv2.imread(userimage[1:])

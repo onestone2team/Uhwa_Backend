@@ -42,17 +42,17 @@ class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ("id", "comment", "grade", "user", "created_at")
-    
+
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ("comment", "grade",)
-    
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     comments_set = CommentsSerializer(many=True)
     category = serializers.SerializerMethodField()
-    
+
     def get_user(self, obj):
         return obj.user.email
 
@@ -65,4 +65,4 @@ class MachineLearningSerializer(serializers.ModelSerializer):
     class Meta:
         model = MachineLearning
         fields = ("model", "category", "image")
-        
+

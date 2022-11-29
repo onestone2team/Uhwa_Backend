@@ -6,7 +6,7 @@ import re
 
 class UserSerializer(serializers.ModelSerializer):
     password_check = serializers.CharField(max_length=50, write_only=True)
-    
+
     class Meta:
         model = Users
         fields = '__all__'
@@ -14,15 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         is_password = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$')
         if not is_password.fullmatch(attrs['password']):
-            raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")
+            raise serializers.ValidationError({"message":"비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다."})
         password_valid = passwordvalidator(
             attrs['password'], attrs["password_check"])
         if password_valid == False:
-            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+            raise serializers.ValidationError({"message":"비밀번호가 일치하지 않습니다."})
         attrs.pop('password_check', None)
         email_valid = emailvalidator(attrs['email'])
         if email_valid == False:
-            raise serializers.ValidationError("유효하지 않은 이메일입니다.")
+            raise serializers.ValidationError({"message":"유효하지 않은 이메일입니다."})
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -62,12 +62,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if 'password' in attrs:
             is_password = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$')
             if not is_password.fullmatch(attrs['password']):
-                raise serializers.ValidationError("비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다.")
+                raise serializers.ValidationError({"message":"비밀번호는 최소 8자이상, 숫자, 문자 특수문자를 하나이상 포함해야합니다."})
         # 핸드폰 번호
         if 'phone' in attrs:
             phone_valid = phonevalidator(attrs['phone'])
             if phone_valid == False:
-                raise serializers.ValidationError("유효하지 않은 형식입니다. 다시 입력해주세요.")
+                raise serializers.ValidationError({"message":"유효하지 않은 형식입니다. 다시 입력해주세요."})
         return super().validate(attrs)
 
     def update(self, instance, validated_data):
